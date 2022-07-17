@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Document</title>
+
+		<script src="https://unpkg.com/vue@3"></script>
+
+		<style>
+			html,
+			body {
+				height: 100%;
+			}
+
+			body {
+				display: grid;
+				place-items: center;
+			}
+
+			.text-red {
+				color: red;
+			}
+
+			.text-green {
+				color: green;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<!-- v model binds message to the value of the input and is an onchange event listener -->
+			<input type="text" v-model="message" />
+
+			<p>{{ message }} {{message.length}}</p>
+
+			<!-- for attributes, use vbind to bind the attribute class to the result of the expression passed -->
+			<button v-bind:class="buttonClasses">Click Me</button>
+
+			<!-- vbind shortcut just colon. v-on:click listens for the click event to run the red function -->
+			<button :class="buttonClasses" v-on:click="red">
+				Click Me For Red Text
+			</button>
+
+			<!-- v-on shortcut is @symbol -->
+			<button :class="active ? 'text-red' : 'text-green'" @click="toggle">
+				Click Me To Toggle
+			</button>
+
+			<!-- v-if won't render this element at all. -->
+			<section v-if="inProgressAssignments.length">
+				<h2>In Progress</h2>
+				<ul>
+					<!-- in order to dynamically create a list from info in the assignments array. need to add a key so that vue can keep track of which child has been updated -->
+					<li v-for="assignment in inProgressAssignments" :key="assignment.id">
+						<label for="">
+							{{assignment.name}}
+							<!-- v-model binds the checked status of the input to  assignment.complete and will update the value in the array if changed -->
+							<input type="checkbox" v-model="assignment.complete" />
+						</label>
+					</li>
+				</ul>
+				<!-- can see the bound values updated here when the box is checked
+				<pre>
+          {{assignments}}
+        </pre> -->
+			</section>
+
+			<!-- vshow sets display to none or block based on a condition. the condition here is if the length of the filtered array of assignments is truthy-->
+			<section v-show="completedAssignments.length">
+				<h2>Completed</h2>
+				<ul>
+					<!-- this will loop over the assignments array filtered based on whether the task is complete or not-->
+					<li v-for="assignment in completedAssignments" :key="assignment.id">
+						<label for="">
+							{{assignment.name}}
+							<!-- v-model binds the checked status of the input to  assignment.complete and will update the value in the array if changed. v-if won't render the element at all -->
+							<input type="checkbox" v-model="assignment.complete" />
+						</label>
+					</li>
+				</ul>
+			</section>
+		</div>
+	</body>
+
+	<script>
+		const { createApp } = Vue;
+
+		/*	createApp({
+			// single source of truth in the app. Vue keeps track of what's going on here so it knows when to rerender. this is the OptionsAPI way to structure vue components. in vue 3, we can use the compositionAPI.
+			data() {
+				return {
+					message: "Hello Vue!",
+					buttonClasses: "text-green",
+					active: false,
+				};
+			},
+			// for options api this is the syntax for custom methods
+			methods: {
+				red() {
+					this.buttonClasses = "text-red";
+				},
+				toggle() {
+					this.active = !this.active;
+				},
+			},
+		}).mount("#app");
+		  */
+
+		let app = {
+			data() {
+				return {
+					message: "Hello Vue!",
+					buttonClasses: "text-green",
+					active: false,
+					assignments: [
+						{ name: "Task 1", complete: false, id: 1 },
+						{ name: "Task 2", complete: false, id: 2 },
+						{ name: "Task 3", complete: false, id: 3 },
+					],
+				};
+			},
+			methods: {
+				red() {
+					this.buttonClasses = "text-red";
+				},
+				toggle() {
+					this.active = !this.active;
+				},
+			},
+
+			// for handling computed properties
+			computed: {
+				completedAssignments() {
+					return this.assignments.filter((assignment) => assignment.complete);
+				},
+				inProgressAssignments() {
+					return this.assignments.filter((assignment) => !assignment.complete);
+				},
+			},
+		};
+
+		createApp(app).mount("#app");
+	</script>
+</html>

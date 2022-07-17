@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Document</title>
+
+		<script src="https://unpkg.com/vue@3"></script>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<style>
+			@keyframes spinner {
+				to {
+					transform: rotate(360deg);
+				}
+			}
+
+			.is-loading:before {
+				content: "";
+				box-sizing: border-box;
+				position: absolute;
+				top: 20px;
+				left: 45px;
+				width: 20px;
+				height: 20px;
+				margin-top: -10px;
+				margin-left: -10px;
+				border-radius: 50%;
+				border: 2px solid #ccc;
+				border-top-color: #000;
+				animation: spinner 0.6s linear infinite;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<!-- class bindings can be done with strings, arrays, objects. here, the key is the class names and the value is a boolean. if true, then these classnames will be applied -->
+			<app-button btntype="primary" processing="true"> Submit </app-button>
+			<app-button btntype="secondary"> Cancel </app-button>
+			<app-button btntype="muted"> Learn More </app-button>
+
+			<Assignments></Assignments>
+		</div>
+	</body>
+
+	<!-- adding type=module solves this error: Uncaught SyntaxError: Cannot use import statement outside a module. This error shows up because this is just a script tag in an html file and not an actual js file -->
+	<script type="module">
+		import App from "./js/components/App.js";
+		const { createApp } = Vue;
+
+		createApp(App).mount("#app");
+	</script>
+</html>

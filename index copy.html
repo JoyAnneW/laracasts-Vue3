@@ -34,6 +34,13 @@
 			<!-- v model binds message to the value of the input and is an onchange event listener -->
 			<input type="text" v-model="message" />
 
+			<!-- manual reproduction of what vmodel does. set the value to "message" and listen for an input event which updates message to event.target.value -->
+			<input
+				type="text"
+				:value="message"
+				@input="message = $event.target.value"
+			/>
+
 			<p>{{ message }} {{message.length}}</p>
 
 			<!-- for attributes, use vbind to bind the attribute class to the result of the expression passed -->

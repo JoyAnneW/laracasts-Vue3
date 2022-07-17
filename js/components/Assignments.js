@@ -4,13 +4,16 @@ import AssignmentCreate from "./AssignmentCreate.js";
 export default {
 	components: { AssignmentsList, AssignmentCreate },
 	template: `
-  <section >
- <AssignmentsList title="in progress" :assignments="filters.inProgress"></AssignmentsList>
- <AssignmentsList title="completed" :assignments="filters.completed"></AssignmentsList>
- <assignment-create @add="add"></assignment-create> 
+  <section class="flex" >
+ <AssignmentsList title="in progress" :assignments="filters.inProgress">
+  <assignment-create @add="add"></assignment-create> 
+ </AssignmentsList>
+ <AssignmentsList title="completed" :assignments="filters.completed" canToggle @toggle="showCompleted=!showCompleted" v-show="showCompleted"></AssignmentsList>
+
 
   </section>
   `,
+	// the slotted info is placed between the opening and closing tags and will appear only in the inprogress instance of the assignmentslist component.
 
 	//  .prevent can be added to the eventlistener itself so that you don't need to add it in the fn that's run on this event.
 	//  <form @submit.prevent="add">
@@ -21,11 +24,8 @@ export default {
 	// @add="add" -this is listening for a custom event called add which is emitted by the child assignmentcreate component. when this event is detected, the add method fn here is called.
 	data() {
 		return {
-			assignments: [
-				{ name: "Task 1", complete: false, id: 1, tag: "math" },
-				{ name: "Task 2", complete: false, id: 2, tag: "reading" },
-				{ name: "Task 3", complete: false, id: 3, tag: "reading" },
-			],
+			assignments: [],
+			showCompleted: true,
 		};
 	},
 	// for handling computed properties
@@ -59,5 +59,14 @@ export default {
 				id: this.assignments.length + 1,
 			});
 		},
+	},
+	// when the component is created (before compiling and  mounting). good point in lifecycle to fetch data
+	created() {
+		fetch("http://localhost:3001/assignments")
+			.then((response) => response.json())
+			.then((assignments) => {
+				console.log(assignments);
+				this.assignments = assignments;
+			});
 	},
 };

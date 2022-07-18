@@ -6,7 +6,7 @@ export default {
 	template: `
   <section class="flex" >
  <AssignmentsList title="in progress" :assignments="filters.inProgress">
-  <assignment-create @add="add"></assignment-create> 
+  		<assignment-create @add="add"></assignment-create> 
  </AssignmentsList>
  <AssignmentsList title="completed" :assignments="filters.completed" canToggle @toggle="showCompleted=!showCompleted" v-show="showCompleted"></AssignmentsList>
 
